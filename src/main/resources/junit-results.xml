@@ -1,0 +1,67 @@
+<testsuites id="" name="" tests="4" failures="2" skipped="1" errors="0" time="30.54786">
+    <testsuite name="example.spec.ts" timestamp="2024-11-25T12:12:42.765Z" hostname="chromium" tests="4" failures="2" skipped="1" time="36.873" errors="0">
+        <testcase name="test that should pass" classname="example.spec.ts" time="0.95">
+            <properties>
+                <property name="Jira" value="ABC-123">
+                </property>
+            </properties>
+        </testcase>
+        <testcase name="test that should fail due to assertion error" classname="example.spec.ts" time="5.899">
+            <failure message="example.spec.ts:9:5 test that should fail due to assertion error" type="FAILURE">
+                <![CDATA[  [chromium] › example.spec.ts:9:5 › test that should fail due to assertion error ──────────────────
+
+    Error: Timed out 5000ms waiting for expect(locator).toHaveTitle(expected)
+
+    Locator: locator(':root')
+    Expected string: "Non-Existent Title"
+    Received string: "Fast and reliable end-to-end testing for modern web apps | Playwright"
+    Call log:
+      - expect.toHaveTitle with timeout 5000ms
+      - waiting for locator(':root')
+        9 × locator resolved to <html lang="en" dir="ltr" data-theme="light" data-has-hydrated="true" class="plugin-pages plugin-id-default" data-rh="lang,dir,class,data-has-hydrated">…</html>
+          - unexpected value "Fast and reliable end-to-end testing for modern web apps | Playwright"
+
+
+       9 | test("test that should fail due to assertion error", async ({ page }) => {
+      10 |   await page.goto("https://playwright.dev/");
+    > 11 |   await expect(page).toHaveTitle("Non-Existent Title");
+         |                      ^
+      12 | });
+      13 |
+      14 | test("test that should fail due to unexpected error", async ({ page }) => {
+        at /home/user/repos/testing-frameworks/PlaywrightTest/tests/example.spec.ts:11:22
+]]>
+            </failure>
+        </testcase>
+        <testcase name="test that should fail due to unexpected error" classname="example.spec.ts" time="30.024">
+            <failure message="example.spec.ts:14:5 test that should fail due to unexpected error" type="FAILURE">
+                <![CDATA[  [chromium] › example.spec.ts:14:5 › test that should fail due to unexpected error ────────────────
+
+    Test timeout of 30000ms exceeded.
+
+    Error: page.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for locator('#non-existent-element')
+
+
+      15 |   await page.goto("https://playwright.dev/");
+      16 |   // Attempting to interact with a non-existent element will cause an error
+    > 17 |   await page.click("#non-existent-element");
+         |              ^
+      18 | });
+      19 |
+      20 | test.skip("test that should be skipped", async ({ page }) => {
+        at /home/user/repos/testing-frameworks/PlaywrightTest/tests/example.spec.ts:17:14
+]]>
+            </failure>
+        </testcase>
+        <testcase name="test that should be skipped" classname="example.spec.ts" time="0">
+            <properties>
+                <property name="skip" value="">
+                </property>
+            </properties>
+            <skipped>
+            </skipped>
+        </testcase>
+    </testsuite>
+</testsuites>
