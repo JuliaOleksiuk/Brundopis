@@ -12,43 +12,19 @@ import java.util.List;
 
 public class FastestStaxReader {
 
-    public static List<ImportedTestExecutionBean> parseTestExecutions(String filePath) throws Exception {
+    public static List<ImportedTestExecutionBean> parseFile(String filePath) throws Exception {
         List<ImportedTestExecutionBean> testExecutions = new ArrayList<>();
-        ImportedTestExecutionBean currentBean = null;
-        String currentElement = "";
-        boolean skipTestCase = false;
 
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader reader = factory.createXMLStreamReader(new FileInputStream(filePath));
 
         while (reader.hasNext()) {
             int event = reader.next();
-            switch (event) {
-                case XMLStreamConstants.START_ELEMENT:
-                    currentElement = reader.getLocalName();
-                    if ("testcase".equals(currentElement)) {
-                        currentBean = new ImportedTestExecutionBean();
-                        skipTestCase = false;
-                        processTestCaseAttributes(reader, currentBean);
-                    } else if ("property".equals(currentElement) && currentBean != null) {
-                        skipTestCase = processTestCaseProperties(reader, currentBean) || skipTestCase;
-                    } else if (("failure".equals(currentElement) || "error".equals(currentElement)) && currentBean != null) {
-                        processFailureOrError(reader, currentBean);
-                    } else if ("skipped".equals(currentElement)) {
-                        skipTestCase = true;
-                    }
-                    break;
-
-                case XMLStreamConstants.END_ELEMENT:
-                    if ("testcase".equals(reader.getLocalName()) && currentBean != null) {
-                        if (!skipTestCase) {
-                            determineStatus(currentBean);
-                            testExecutions.add(currentBean);
-                        }
-                        currentBean = null;
-                    }
-                    currentElement = "";
-                    break;
+            if (event == XMLStreamConstants.START_ELEMENT && "testcase".equals(reader.getLocalName())) {
+                ImportedTestExecutionBean testCase = processTestCase(reader);
+                if (testCase != null) {
+                    testExecutions.add(testCase);
+                }
             }
         }
 
@@ -56,53 +32,84 @@ public class FastestStaxReader {
         return testExecutions;
     }
 
-    private static void processTestCaseAttributes(XMLStreamReader reader, ImportedTestExecutionBean bean) {
-        bean.setName(reader.getAttributeValue(null, "name"));
-        bean.setClassName(reader.getAttributeValue(null, "classname"));
+    private static ImportedTestExecutionBean processTestCase(XMLStreamReader reader) throws Exception {
+        ImportedTestExecutionBean testCase = new ImportedTestExecutionBean();
+        testCase.setName(reader.getAttributeValue(null, "name"));
+        testCase.setClassName(reader.getAttributeValue(null, "classname"));
+
+        boolean skipTestCase = false;
+
+        while (reader.hasNext()) {
+            int event = reader.next();
+
+            if (event == XMLStreamConstants.START_ELEMENT) {
+                String elementName = reader.getLocalName();
+                switch (elementName) {
+                    case "property":
+                        skipTestCase = processTestCaseProperty(reader, testCase) || skipTestCase;
+                        break;
+                    case "failure":
+                    case "error":
+                        processFailureOrError(reader, testCase);
+                        break;
+                    case "skipped":
+                        skipTestCase = true;
+                        break;
+                }
+            } else if (event == XMLStreamConstants.END_ELEMENT && "testcase".equals(reader.getLocalName())) {
+                break;
+            }
+        }
+
+        if (skipTestCase) {
+            return null; // Skip the test case if flagged
+        }
+
+        determineStatus(testCase);
+        return testCase;
     }
 
-    private static boolean processTestCaseProperties(XMLStreamReader reader, ImportedTestExecutionBean bean) {
+    private static boolean processTestCaseProperty(XMLStreamReader reader, ImportedTestExecutionBean testCase) {
         String propertyName = reader.getAttributeValue(null, "name");
         String propertyValue = reader.getAttributeValue(null, "value");
 
         if ("Jira".equals(propertyName)) {
-            bean.setJiraIssueKey(propertyValue);
+            testCase.setJiraIssueKey(propertyValue);
         }
         return "skip".equals(propertyName);
     }
 
-    private static void processFailureOrError(XMLStreamReader reader, ImportedTestExecutionBean bean) throws Exception {
+    private static void processFailureOrError(XMLStreamReader reader, ImportedTestExecutionBean testCase) throws Exception {
         String message = reader.getAttributeValue(null, "message");
-        StringBuilder stackTrace = new StringBuilder();
+        StringBuilder details = new StringBuilder();
 
         while (reader.hasNext()) {
             int event = reader.next();
             if (event == XMLStreamConstants.CHARACTERS) {
-                stackTrace.append(reader.getText().trim());
+                details.append(reader.getText());
             } else if (event == XMLStreamConstants.END_ELEMENT &&
                     ("failure".equals(reader.getLocalName()) || "error".equals(reader.getLocalName()))) {
                 break;
             }
         }
 
-        bean.setStatus(ImportedTestExecutionStatus.FAILED);
-        bean.setComment(!stackTrace.isEmpty() ? stackTrace.toString() : message);
+        testCase.setStatus(ImportedTestExecutionStatus.FAILED);
+        testCase.setComment(details.length() > 0 ? details.toString().trim() : message);
     }
 
-    private static void determineStatus(ImportedTestExecutionBean bean) {
-        if (bean.getStatus() == null) {
-            bean.setStatus(ImportedTestExecutionStatus.PASSED);
+    private static void determineStatus(ImportedTestExecutionBean testCase) {
+        if (testCase.getStatus() == null) {
+            testCase.setStatus(ImportedTestExecutionStatus.PASSED);
         }
     }
+
 
     public static void main(String[] args) {
         try {
             long startTime = System.currentTimeMillis();
 
             String filePath = "src/main/resources/big-junit-results.xml";
-            List<ImportedTestExecutionBean> executions = parseTestExecutions(filePath);
-            executions.forEach(System.out::println);
-
+            List<ImportedTestExecutionBean> executions = parseFile(filePath);
             long endTime = System.currentTimeMillis();
             System.out.println("Execution time: " + (endTime - startTime) + "ms");
         } catch (Exception e) {
