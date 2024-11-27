@@ -1,46 +1,32 @@
 package org.example.jackson_beans;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TestCase {
-    @JsonProperty("name")
+    @JacksonXmlProperty(isAttribute = true)
     private String name;
 
-    @JsonProperty("classname")
-    private String className;
+    @JacksonXmlProperty(isAttribute = true)
+    private String classname;
 
-    @JsonProperty("time")
-    private String time;
+    @JacksonXmlProperty(isAttribute = true)
+    private double time;
 
-    @JsonProperty("failure")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "properties")
+    private List<Property> properties;
+
+    @JacksonXmlProperty(localName = "failure")
     private Failure failure;
 
-    @JsonProperty("skipped")
+    @JacksonXmlProperty(localName = "skipped")
     private Skipped skipped;
 
-    @JsonProperty("properties")
-    private Properties properties;
-
-    private String status;
-
-    public TestCase() {
-        determineStatus();
-    }
-
-    void determineStatus() {
-        if (failure != null) {
-            status = "FAILED";
-        } else if (skipped != null) {
-            status = "SKIPPED";
-        } else {
-            status = "PASSED";
-        }
-    }
-
-    // Getters and setters
     public String getName() {
         return name;
     }
@@ -49,20 +35,28 @@ public class TestCase {
         this.name = name;
     }
 
-    public String getClassName() {
-        return className;
+    public String getClassname() {
+        return classname;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setClassname(String classname) {
+        this.classname = classname;
     }
 
-    public String getTime() {
+    public double getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(double time) {
         this.time = time;
+    }
+
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
     }
 
     public Failure getFailure() {
@@ -80,33 +74,5 @@ public class TestCase {
     public void setSkipped(Skipped skipped) {
         this.skipped = skipped;
     }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    @Override
-    public String toString() {
-        return "TestCase{" +
-                "name='" + name + '\'' +
-                ", className='" + className + '\'' +
-                ", time='" + time + '\'' +
-                ", failure=" + failure +
-                ", skipped='" + skipped + '\'' +
-                ", properties=" + properties +
-                ", status='" + getStatus() + '\'' +
-                '}' + "\n";
-    }
 }
+

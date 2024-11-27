@@ -1,15 +1,14 @@
 package org.example.jackson_beans;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Skipped {
-    @JsonProperty("message")
-    private String message;
 
-    @JsonProperty("CDATA")
-    private String details;
+    @JacksonXmlProperty(isAttribute = true)
+    private String message;
 
     public String getMessage() {
         return message;
@@ -17,21 +16,5 @@ public class Skipped {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    @Override
-    public String toString() {
-        return "Skipped{" +
-                "message='" + message + '\'' +
-                ", details='" + details + '\'' +
-                '}';
     }
 }

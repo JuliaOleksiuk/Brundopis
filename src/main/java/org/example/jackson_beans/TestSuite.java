@@ -1,32 +1,48 @@
 package org.example.jackson_beans;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TestSuite {
-    @JsonProperty("name")
+
+    @JacksonXmlProperty(isAttribute = true)
     private String name;
 
-    @JsonProperty("tests")
+    @JacksonXmlProperty(isAttribute = true)
     private int tests;
 
-    @JsonProperty("failures")
+    @JacksonXmlProperty(isAttribute = true)
     private int failures;
 
-    @JsonProperty("errors")
-    private int errors;
-
-    @JsonProperty("skipped")
+    @JacksonXmlProperty(isAttribute = true)
     private int skipped;
 
-    @JsonProperty("time")
-    private String time;
+    @JacksonXmlProperty(isAttribute = true)
+    private double time;
 
-    @JsonProperty("testcase")
+    @JacksonXmlProperty(isAttribute = true)
+    private int errors;
+
+    @JacksonXmlElementWrapper(useWrapping = false)
+    @JacksonXmlProperty(localName = "testcase")
     private List<TestCase> testCases;
+
+    @JacksonXmlProperty(localName = "testsuite")
+    private List<TestSuite> testSuites;
+
+    @JsonCreator
+    public TestSuite(
+            @JsonProperty(value= "name", required = true) String name,
+            @JsonProperty(value= "tests", required = true) int tests
+    ) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -52,14 +68,6 @@ public class TestSuite {
         this.failures = failures;
     }
 
-    public int getErrors() {
-        return errors;
-    }
-
-    public void setErrors(int errors) {
-        this.errors = errors;
-    }
-
     public int getSkipped() {
         return skipped;
     }
@@ -68,12 +76,20 @@ public class TestSuite {
         this.skipped = skipped;
     }
 
-    public String getTime() {
+    public double getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(double time) {
         this.time = time;
+    }
+
+    public int getErrors() {
+        return errors;
+    }
+
+    public void setErrors(int errors) {
+        this.errors = errors;
     }
 
     public List<TestCase> getTestCases() {
@@ -84,16 +100,11 @@ public class TestSuite {
         this.testCases = testCases;
     }
 
-    @Override
-    public String toString() {
-        return "Test Suite{" +
-                "name='" + name + '\'' +
-                ", tests=" + tests +
-                ", failures=" + failures +
-                ", errors=" + errors +
-                ", skipped=" + skipped +
-                ", time='" + time + '\'' +
-                ", testCases=" + testCases +
-                '}' + "\n";
+    public List<TestSuite> getTestSuites() {
+        return testSuites;
+    }
+
+    public void setTestSuites(List<TestSuite> testSuites) {
+        this.testSuites = testSuites;
     }
 }

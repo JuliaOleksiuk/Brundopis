@@ -1,17 +1,16 @@
 package org.example.jackson_beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Property {
-    @JsonProperty("name")
+    @JacksonXmlProperty(isAttribute = true)
     private String name;
 
-    @JsonProperty("value")
+    @JacksonXmlProperty(isAttribute = true)
     private String value;
 
-    // Getters and setters
     public String getName() {
         return name;
     }
@@ -26,13 +25,5 @@ public class Property {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return "Property{" +
-                "name='" + name + '\'' +
-                ", value='" + value + '\'' +
-                '}';
     }
 }

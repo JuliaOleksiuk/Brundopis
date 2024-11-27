@@ -1,16 +1,19 @@
 package org.example.jackson_beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Error {
-    @JsonProperty("message")
+    @JacksonXmlProperty(isAttribute = true)
     private String message;
 
-    @JsonProperty("CDATA")
-    private String details;
+    @JacksonXmlProperty(isAttribute = true)
+    private String type;
+
+    @JacksonXmlText
+    private String content;
 
     public String getMessage() {
         return message;
@@ -20,19 +23,19 @@ public class Error {
         this.message = message;
     }
 
-    public String getDetails() {
-        return details;
+    public String getType() {
+        return type;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "Error{" +
-                "message='" + message + '\'' +
-                ", details='" + details + '\'' +
-                '}';
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

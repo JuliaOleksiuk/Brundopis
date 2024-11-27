@@ -62,7 +62,7 @@ public class FastestStaxReader {
         }
 
         if (skipTestCase) {
-            return null; // Skip the test case if flagged
+            return null;
         }
 
         determineStatus(testCase);
