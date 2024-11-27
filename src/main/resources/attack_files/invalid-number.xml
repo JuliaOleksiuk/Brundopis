@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+    <testsuite name="Cucumber" time="abc" tests="4" skipped="1.0.0" failures="2e2e" errors="NaN">
+        <testcase classname="Various test outcomes" name="Test that should pass" time="1.2.3"/>
+    </testsuite>
+
+    <testsuite name="Cucumber" time="99999999999999999999999999999999999999999999999999" tests="99999999999999999999999999999999999999999999999999" skipped="99999999999999999999999999999999999999999999999999" failures="99999999999999999999999999999999999999999999999999" errors="99999999999999999999999999999999999999999999999999">
+        <testcase classname="Various test outcomes" name="Test that should pass" time="99999999999999999999999999999999999999999999999999"/>
+    </testsuite>
+
+    <testsuite name="Cucumber" time="-0.069" tests="-4" skipped="-1" failures="-2" errors="-0">
+        <testcase classname="Various test outcomes" name="Test that should pass" time="-0.003"/>
+    </testsuite>
+
+    <testsuite name="Cucumber" time="" tests="" skipped="" failures="" errors="">
+        <testcase classname="Various test outcomes" name="Test that should pass" time=""/>
+    </testsuite>
+
+    <testsuite name="Cucumber" time="1e1000000" tests="1.7976931348623157e308" skipped="-1e-1000000" failures="1.0E-324" errors="Infinity">
+        <testcase classname="Various test outcomes" name="Test that should pass" time="1e309"/>
+    </testsuite>
+
+    <testsuite name="Cucumber" time="0x1A" tests="0b101" skipped="075" failures="0002" errors="0123.456">
+        <testcase classname="Various test outcomes" name="Test that should pass" time="1_000_000"/>
+    </testsuite>
+
+</testsuites>

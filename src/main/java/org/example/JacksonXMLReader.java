@@ -16,8 +16,6 @@ public class JacksonXMLReader {
 
     public static void main(String[] args) {
         try {
-
-            long start = System.currentTimeMillis();
             ClassLoader classLoader = JacksonXMLReader.class.getClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream("testSuites.xml");
 
@@ -26,14 +24,7 @@ public class JacksonXMLReader {
             }
 
             XmlMapper xmlMapper = new XmlMapper();
-            JUnitReport report = xmlMapper.readValue(inputStream, JUnitReport.class);
-
-            List<ImportedTestExecutionBean> importedTestExecutionBeans = mapJUnitReportToBeans(report);
-            long end = System.currentTimeMillis();
-
-            System.out.println("Report: " + report.getTestSuites().size() + " test suites");
-            System.out.println("Time taken: " + (end - start) + "ms");
-
+            xmlMapper.readValue(inputStream, JUnitReport.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
