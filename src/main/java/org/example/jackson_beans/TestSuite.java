@@ -34,12 +34,12 @@ public class TestSuite {
     private List<TestCase> testCases;
 
     @JacksonXmlProperty(localName = "testsuite")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<TestSuite> testSuites;
 
     @JsonCreator
     public TestSuite(
-            @JsonProperty(value= "name", required = true) String name,
-            @JsonProperty(value= "tests", required = true) int tests
+            @JsonProperty(value= "name", required = true) String name
     ) {
         this.name = name;
     }

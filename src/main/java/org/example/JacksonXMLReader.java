@@ -19,7 +19,7 @@ public class JacksonXMLReader {
 
             long start = System.currentTimeMillis();
             ClassLoader classLoader = JacksonXMLReader.class.getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("example.xml");
+            InputStream inputStream = classLoader.getResourceAsStream("testSuites.xml");
 
             if (inputStream == null) {
                 throw new IllegalArgumentException("File not found in resources: junit-report.xml");
