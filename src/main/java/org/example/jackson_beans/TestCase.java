@@ -1,6 +1,7 @@
 package org.example.jackson_beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
@@ -8,24 +9,27 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TestCase {
-    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty("name")
     private String name;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty("classname")
     private String classname;
 
-    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty("time")
     private double time;
+
+    @JsonProperty("failure")
+    private Failure failure;
+
+    @JsonProperty("error")
+    private Error error;
+
+    @JsonProperty("skipped")
+    private Skipped skipped;
 
     @JacksonXmlElementWrapper(useWrapping = false)
     @JacksonXmlProperty(localName = "properties")
     private List<Property> properties;
-
-    @JacksonXmlProperty(localName = "failure")
-    private Failure failure;
-
-    @JacksonXmlProperty(localName = "skipped")
-    private Skipped skipped;
 
     public String getName() {
         return name;

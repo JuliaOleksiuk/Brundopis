@@ -1,71 +1,43 @@
 package org.example;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import org.example.bean.ImportedTestExecutionBean;
 import org.example.bean.ImportedTestExecutionStatus;
-import org.example.jackson_beans.JUnitReport;
-import org.example.jackson_beans.Property;
-import org.example.jackson_beans.TestCase;
-import org.example.jackson_beans.TestSuite;
+import org.example.jackson_beans.*;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class JacksonXMLReader {
 
     public static void main(String[] args) {
         try {
-            ClassLoader classLoader = JacksonXMLReader.class.getClassLoader();
-            InputStream inputStream = classLoader.getResourceAsStream("testSuites.xml");
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("example.xml");
 
             if (inputStream == null) {
-                throw new IllegalArgumentException("File not found in resources: junit-report.xml");
+                throw new IllegalArgumentException("File not found in resources: withoutsuites.xml");
             }
 
             XmlMapper xmlMapper = new XmlMapper();
-            xmlMapper.readValue(inputStream, JUnitReport.class);
+
+            String xmlContent = new Scanner(inputStream, StandardCharsets.UTF_8).useDelimiter("\\A").next();
+            JsonNode rootNode = xmlMapper.readTree(xmlContent);
+
+            JUnitReport jUnitReport = new JUnitReport();
+            if (rootNode.has("testcase")) {
+                TestSuite testSuite = xmlMapper.readValue(xmlContent, TestSuite.class);
+                jUnitReport.getTestSuites().add(testSuite);
+            } else {
+                TestSuites result = xmlMapper.readValue(xmlContent, TestSuites.class);
+                jUnitReport.setTestSuites(result.getTestSuites());
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    public static List<ImportedTestExecutionBean> mapJUnitReportToBeans(JUnitReport jUnitReport){
-        List<ImportedTestExecutionBean> importedTestExecutionBeans = new ArrayList<>();
-        for (TestSuite testSuite : jUnitReport.getTestSuites()) {
-            for (TestCase testCase : testSuite.getTestCases()) {
-                ImportedTestExecutionStatus status = determineStatus(testCase);
-
-                String jiraIssueKey = null;
-                if(testCase.getProperties() != null) {
-                    for (Property property : testCase.getProperties()) {
-                        if ("Jira".equals(property.getName())) {
-                            jiraIssueKey = property.getValue();
-                            break;
-                        }
-                    }
-                }
-
-                ImportedTestExecutionBean bean = new ImportedTestExecutionBean(
-                        testCase.getName(),
-                        testCase.getClassname(),
-                        status,
-                        jiraIssueKey,
-                        testCase.getFailure() != null ? testCase.getFailure().getMessage() : null
-                );
-                importedTestExecutionBeans.add(bean);
-            }
-        }
-        return importedTestExecutionBeans;
-    }
-
-    private static ImportedTestExecutionStatus determineStatus(TestCase testCase) {
-        if (testCase.getFailure() != null) {
-            return ImportedTestExecutionStatus.FAILED;
-        } else if (testCase.getSkipped() != null) {
-            return ImportedTestExecutionStatus.SKIPPED;
-        } else {
-            return ImportedTestExecutionStatus.PASSED;
         }
     }
 }

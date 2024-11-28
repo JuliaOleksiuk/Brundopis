@@ -1,12 +1,11 @@
 package org.example.jackson_beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Skipped {
-
-    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty("message")
     private String message;
 
     public String getMessage() {

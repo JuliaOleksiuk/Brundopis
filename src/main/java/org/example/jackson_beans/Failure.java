@@ -1,27 +1,18 @@
 package org.example.jackson_beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Failure {
-    @JacksonXmlProperty(isAttribute = true)
-    private String message;
-
-    @JacksonXmlProperty(isAttribute = true)
+    @JsonProperty("type")
     private String type;
 
-    @JacksonXmlText
-    private String content;
+    @JsonProperty("message")
+    private String message;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    @JsonProperty("content")
+    private String content; // For CDATA
 
     public String getType() {
         return type;
@@ -37,5 +28,13 @@ public class Failure {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

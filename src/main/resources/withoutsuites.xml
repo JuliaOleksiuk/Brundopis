@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="0.069" tests="4" skipped="1" failures="2" errors="0">
+    <testcase classname="Various test outcomes" name="Regression - Import test execution results by API 1 (no failure, no error=>passed)- Cucumber" time="0.003">
+        <properties>
+            <property name="Jira" value="QAREG-567">
+            </property>
+        </properties>
+        <system-out><![CDATA[
+Given everything is set up correctly........................................passed
+When the test runs successfully.............................................passed
+Then the test should pass...................................................passed
+]]></system-out>
+    </testcase>
+    <testcase classname="Various test outcomes" name="Regression - Import test execution results by API 2 (failure) - Cucumber" time="0.002">
+        <properties>
+            <property name="Jira" value="QAREG-557">
+            </property>
+        </properties>
+        <failure type="java.lang.AssertionError">
+            <![CDATA[java.lang.AssertionError
+    at org.junit.Assert.fail(Assert.java:87)
+    at org.junit.Assert.assertTrue(Assert.java:42)
+    at org.junit.Assert.assertTrue(Assert.java:53)
+    at TestSteps.the_test_should_fail_due_to_assertion_error(TestSteps.java:31)
+    at ✽.the test should fail due to assertion error(file:///home/user/repos/testing-frameworks/CucumberTest/src/test/resources/features/tests.feature:11)
+]]>
+        </failure>
+        <system-out><![CDATA[
+Given everything is set up correctly........................................passed
+When the test runs with an assertion failure................................passed
+Then the test should fail due to assertion error............................failed
+]]></system-out>
+    </testcase>
+    <testcase classname="Various test outcomes" name="Regression - Import test execution results by API 3 (failure) - Cucumber" time="0.001">
+        <properties>
+            <property name="Jira" value="QAREG-475">
+            </property>
+        </properties>
+        <failure type="java.lang.RuntimeException" message="Unexpected error occurred">
+            <![CDATA[java.lang.RuntimeException: Unexpected error occurred
+    at TestSteps.the_test_encounters_an_unexpected_error(TestSteps.java:37)
+    at ✽.the test encounters an unexpected error(file:///home/user/repos/testing-frameworks/CucumberTest/src/test/resources/features/tests.feature:15)
+]]>
+        </failure>
+        <system-out><![CDATA[
+Given everything is set up correctly........................................passed
+When the test encounters an unexpected error................................failed
+Then the test should fail due to an unexpected error........................skipped
+]]></system-out>
+    </testcase>
+    <testcase classname="Various test outcomes" name="Regression - Import test execution results by API 4 (skipped=>default status) - Cucumber" time="0.003">
+        <properties>
+            <property name="Jira" value="QAREG-474">
+            </property>
+        </properties>
+        <skipped message="got: &lt;false&gt;, expected: is &lt;true&gt;">
+            <![CDATA[org.junit.AssumptionViolatedException: got: <false>, expected: is <true>
+    at org.junit.Assume.assumeThat(Assume.java:106)
+    at org.junit.Assume.assumeTrue(Assume.java:50)
+    at TestSteps.the_test_is_skipped(TestSteps.java:48)
+    at ✽.the test is skipped(file:///home/user/repos/testing-frameworks/CucumberTest/src/test/resources/features/tests.feature:20)
+]]>
+        </skipped>
+        <system-out><![CDATA[
+Given everything is set up correctly........................................passed
+When the test is skipped....................................................skipped
+Then the test should be skipped.............................................skipped
+]]></system-out>
+    </testcase>
+</testsuite>
